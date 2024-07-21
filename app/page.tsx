@@ -1,113 +1,105 @@
-import Image from "next/image";
+"use client"
+import React, { useState, useEffect } from 'react';
+import { createPublicClient, http, parseAbiItem, formatUnits, numberToHex } from 'viem';
+import { mainnet } from 'viem/chains';
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+const projectId = 'https://eth-mainnet.g.alchemy.com/v2/UvLI3XuOjozs1lGrpzd-B2r7o-RglwX5';
+const USDT_ADDRESS = '0xdac17f958d2ee523a2206206994597c13d831ec7';
+const TRANSFER_ABI = parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 value)');
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+interface Transfer {
+    blockNumber: number;
+    transactionHash: string;
+    from: string;
+    to: string;
+    value: string;
 }
+
+const Home: React.FC = () => {
+    const [currentBlockHeight, setCurrentBlockHeight] = useState<number | null>(null);
+    const [currentBlockHash, setCurrentBlockHash] = useState<string | null>(null);
+    const [usdtTransfers, setUsdtTransfers] = useState<Transfer[]>([]);
+
+    useEffect(() => {
+        const ethClient = createPublicClient({
+            chain: mainnet,
+            transport: http(projectId),
+        });
+
+        const getBlockData = async () => {
+            const latestBlock = await ethClient.getBlock({ blockTag: 'latest' });
+            setCurrentBlockHeight(Number(latestBlock.number));
+            setCurrentBlockHash(latestBlock.hash);
+        };
+
+        const watchEvents = () => {
+            ethClient.watchBlockNumber({
+                onBlockNumber: async (blockNumber) => {
+                    if (blockNumber === undefined) {
+                        setCurrentBlockHeight(null);
+                        return;
+                    }
+
+                    const safeBlockNumber = blockNumber !== undefined ? Number(blockNumber) :Number(0);
+                    setCurrentBlockHeight(Number(safeBlockNumber));
+                    const fromblock = Number(safeBlockNumber) - 100;
+                    const toblock = safeBlockNumber;
+                    const fromBlock = BigInt(fromblock);
+                    const toBlock = BigInt(toblock);
+                    const logs = await ethClient.getLogs({
+                        address: USDT_ADDRESS,
+                        event: TRANSFER_ABI,
+                        fromBlock,
+                        toBlock,
+                    });
+
+                    const newTransfers = logs.map(log => {
+                        const { from, to, value } = log.args || {};
+                        return {
+                            blockNumber: Number(log.blockNumber),
+                            transactionHash: log.transactionHash,
+                            from: from as string,
+                            to: to as string,
+                            value: value ? Number(formatUnits(value, 6)).toFixed(5) : '0.00000'
+                        };
+                    });
+                    setUsdtTransfers(newTransfers);
+                },
+            });
+        };
+
+        getBlockData();
+        watchEvents();
+    }, []);
+
+    return (
+        <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', backgroundColor: '#f4f4f9' }}>
+            <h1 style={{ color: '#333', borderBottom: '2px solid #ddd', paddingBottom: '10px' }}>Latest Block Info</h1>
+            <p style={{ fontSize: '18px', color: '#555' }}>Block Height: <span style={{ fontWeight: 'bold' }}>{currentBlockHeight}</span></p>
+            <p style={{ fontSize: '18px', color: '#555' }}>Block Hash: <span style={{ fontWeight: 'bold' }}>{currentBlockHash}</span></p>
+            <h2 style={{ color: '#333', borderBottom: '2px solid #ddd', paddingBottom: '10px', marginTop: '20px' }}>Latest USDT Transfer Records</h2>
+            {usdtTransfers.map((transfer, index) => (
+                <div key={index} style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '10px', marginBottom: '10px', backgroundColor: '#fff' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '5px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#666' }}>Transaction Hash:</span>
+                        <span style={{ color: '#333' }}>{transfer.transactionHash}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '5px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#666' }}>From:</span>
+                        <span style={{ color: '#333' }}>{transfer.from}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '5px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#666' }}>To:</span>
+                        <span style={{ color: '#333' }}>{transfer.to}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '5px' }}>
+                        <span style={{ fontWeight: 'bold', color: '#666' }}>Amount:</span>
+                        <span style={{ color: '#333' }}>{transfer.value} USDT</span>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+export default Home;
