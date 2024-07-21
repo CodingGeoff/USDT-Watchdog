@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { createPublicClient, http, parseAbiItem, formatUnits, numberToHex } from 'viem';
 import { mainnet } from 'viem/chains';
 
-const projectId = 'https://eth-mainnet.g.alchemy.com/v2/UvLI3XuOjozs1lGrpzd-B2r7o-RglwX5';
+const projectId = process.env.json_rpc_projectId;
 const USDT_ADDRESS = '0xdac17f958d2ee523a2206206994597c13d831ec7';
 const TRANSFER_ABI = parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 value)');
 
